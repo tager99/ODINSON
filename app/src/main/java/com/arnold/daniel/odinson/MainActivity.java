@@ -2,11 +2,20 @@ package com.arnold.daniel.odinson;
 
 import android.graphics.Color;
 import android.os.AsyncTask;
+import android.support.annotation.NonNull;
+import android.support.v4.app.NotificationCompat;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Button;
-
+import android.view.MenuItem;
+import android.view.Menu;
+import android.support.design.widget.NavigationView;
+import android.support.v4.app.Fragment;
 
 import java.io.BufferedReader;
 import java.io.InputStream;
@@ -33,10 +42,30 @@ public class MainActivity extends AppCompatActivity {
     private Socket socket_2;
 
 
+    private DrawerLayout mDrawer_layout;
+    private ActionBarDrawerToggle mToggle;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        Toolbar topToolBar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(topToolBar);
+
+        mDrawer_layout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        mToggle = new ActionBarDrawerToggle(this, mDrawer_layout, R.string.open, R.string.close);
+        mToggle.syncState();
+
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+
+
+
+
+
+
+
 
 
         final Button anButton = (Button) findViewById(R.id.button);
@@ -59,18 +88,60 @@ public class MainActivity extends AppCompatActivity {
 
         });
 
-        final Button refresh_button = (Button) findViewById(R.id.refresh_button);
-        refresh_button.setOnClickListener(new View.OnClickListener()
-        {
-           public void onClick(View v)
-           {
-               refreshjob refresh = new refreshjob();
-               refresh.execute();
-           }
-        });
+
+
+
+         NavigationView nv = (NavigationView)findViewById(R.id.nvView);
+         nv.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+             @Override
+             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                 switch (item.getItemId()) {
+                     case (R.id.nav_first_fragment):
+                         return true;
+                     case (R.id.nav_second_fragment) :
+                         return true;
+                     default:
+                         return true;
+
+
+                 }
+
+             }
+
+         });
+
 
 
     }
+
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected (MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        if(mToggle.onOptionsItemSelected(item))
+            return true;
+        switch (item.getItemId()) {
+            case R.id.action_refresh:
+                refreshjob refresh = new refreshjob();
+                refresh.execute();
+                return true;
+
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+
+
 
     private void updatezustand (String anaus)
     {
@@ -86,12 +157,14 @@ public class MainActivity extends AppCompatActivity {
                 System.out.println("ändere Text in Licht ist an");
                 Anzeige.setText("Das Licht ist an");
                 anButton.setBackgroundColor(gelb);
+                anButton.setText("Licht AN");
             }
             if (anaus.equals("1")==true)
             {
                 System.out.println("ändere Text in Licht ist aus");
                 Anzeige.setText("Das Licht ist aus");
                 anButton.setBackgroundResource(android.R.drawable.btn_default);
+                anButton.setText("Licht AUS");
 
             }
 
@@ -177,7 +250,7 @@ public class MainActivity extends AppCompatActivity {
            }
             System.out.println("100ms pause:");
            try {
-               Thread.sleep(200);
+               Thread.sleep(100);
            } catch(Exception ex) {
                System.out.println(ex);
            }

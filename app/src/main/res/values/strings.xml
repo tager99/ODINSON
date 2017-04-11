@@ -3,4 +3,8 @@
     <string name="Schalter">Licht AN/AUS</string>
     <string name="zustand">Das Licht ist </string>
     <string name="refresh">refresh</string>
+    <string name="Title">Odinson</string>
+
+    <string name="open">open</string>
+    <string name ="close">close</string>
 </resources>
