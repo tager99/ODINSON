@@ -1,10 +1,9 @@
 package com.arnold.daniel.odinson;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.support.annotation.NonNull;
-import android.support.v4.app.NotificationCompat;
-import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
@@ -15,23 +14,17 @@ import android.widget.Button;
 import android.view.MenuItem;
 import android.view.Menu;
 import android.support.design.widget.NavigationView;
-import android.support.v4.app.Fragment;
 
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
-import java.io.PrintStream;
 import java.net.Socket;
-import java.io.BufferedWriter;
-import java.io.OutputStream;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.UnknownHostException;
 
 
 import android.widget.TextView;
-import android.view.View.OnClickListener;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -59,6 +52,16 @@ public class MainActivity extends AppCompatActivity {
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+        final Button weissButton = (Button) findViewById(R.id.button_weiss);
+        weissButton.setOnClickListener(new View.OnClickListener() {
+                                           public void onClick(View v) {
+                                               connectjob job = new connectjob();
+                                               job.execute("weiss");
+
+
+                                           }
+                                       });
+
 
 
 
@@ -73,7 +76,7 @@ public class MainActivity extends AppCompatActivity {
 
             public void onClick(View v) {
                 connectjob job = new connectjob();
-                job.execute();
+                job.execute("an");
                // refreshjob refresh = new refreshjob();
                 //refresh.execute()
 
@@ -97,8 +100,13 @@ public class MainActivity extends AppCompatActivity {
              public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                  switch (item.getItemId()) {
                      case (R.id.nav_first_fragment):
+                         Intent intentlicht = new Intent(getApplicationContext(),MainActivity.class);
+                         startActivity(intentlicht);
                          return true;
                      case (R.id.nav_second_fragment) :
+                         Intent intent = new Intent(getApplicationContext(),WeckerActivity.class);
+                         startActivity(intent);
+
                          return true;
                      default:
                          return true;
@@ -192,9 +200,10 @@ public class MainActivity extends AppCompatActivity {
      @Override
      protected String doInBackground(String[] params) {
          try {
+             String what=params[0];
+             String str = what;
              socket = new Socket(SERVER_IP, SERVERPORT);
              System.out.println("Verbindung 1 hergestellt");
-             String str = "an";
              PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
              out.println(str);
              out.flush();
